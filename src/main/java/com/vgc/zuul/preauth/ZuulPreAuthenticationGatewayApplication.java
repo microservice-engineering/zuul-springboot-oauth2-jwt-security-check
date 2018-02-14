@@ -14,5 +14,3 @@ public class ZuulPreAuthenticationGatewayApplication {
 		SpringApplication.run(ZuulPreAuthenticationGatewayApplication.class, args);
 	}
 }
-
-

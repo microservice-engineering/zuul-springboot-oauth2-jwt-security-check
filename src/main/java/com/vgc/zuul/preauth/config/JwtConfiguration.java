@@ -15,29 +15,28 @@ import java.io.IOException;
 
 @Configuration
 public class JwtConfiguration {
-    @Autowired
-    JwtAccessTokenConverter jwtAccessTokenConverter;
+	@Autowired
+	JwtAccessTokenConverter jwtAccessTokenConverter;
 
+	@Bean
+	@Qualifier("tokenStore")
+	public TokenStore tokenStore() {
 
-    @Bean
-    @Qualifier("tokenStore")
-    public TokenStore tokenStore() {
+		System.out.println("Created JwtTokenStore");
+		return new JwtTokenStore(jwtAccessTokenConverter);
+	}
 
-        System.out.println("Created JwtTokenStore");
-        return new JwtTokenStore(jwtAccessTokenConverter);
-    }
-
-    @Bean
-    protected JwtAccessTokenConverter jwtTokenEnhancer() {
-        JwtAccessTokenConverter converter =  new JwtAccessTokenConverter();
-        Resource resource = new ClassPathResource("public.cert");
-        String publicKey = null;
-        try {
-            publicKey = new String(FileCopyUtils.copyToByteArray(resource.getInputStream()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        converter.setVerifierKey(publicKey);
-        return converter;
-    }
+	@Bean
+	protected JwtAccessTokenConverter jwtTokenEnhancer() {
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		Resource resource = new ClassPathResource("public.cert");
+		String publicKey = null;
+		try {
+			publicKey = new String(FileCopyUtils.copyToByteArray(resource.getInputStream()));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		converter.setVerifierKey(publicKey);
+		return converter;
+	}
 }
